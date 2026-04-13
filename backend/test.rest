@@ -1,0 +1,19 @@
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "admin123"
+}
+###
+POST http://localhost:3000/api/users/createUser
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "email": "admin@gmail.com",
+    "password": "admin123",
+    "role": "ADMIN"
+}
+###
+DELETE http://localhost:3000/api/users/deleteUser/1
