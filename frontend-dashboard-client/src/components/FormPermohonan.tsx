@@ -1,69 +1,53 @@
 'use client';
 import React, { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { useReactToPrint } from 'react-to-print'; // <-- MENGGUNAKAN LIBRARY BARU YANG LEBIH CANGGIH
 import TemplatePDFPermohonan from './TemplatePDFPermohonan';
 import logoBank from '../assets/logo2.png'; 
 
+// KATA "export" DI BAWAH INI SANGAT WAJIB ADA
 export interface FormDataPermohonan {
-  nama: string; alamat: string; pekerjaan: string; kontak: string;
-  rincian: string; tujuan: string; caraMemperoleh: string[]; caraSalinan: string;
+  nama: string; 
+  alamat: string; 
+  pekerjaan: string; 
+  kontak: string;
+  rincian: string; 
+  tujuan: string; 
+  caraMemperoleh: string[]; 
+  caraSalinan: string;
 }
+
 const FormPermohonan: React.FC = () => {
   const { register, handleSubmit } = useForm<FormDataPermohonan>({
     defaultValues: { caraMemperoleh: [] }
   });
 
-  const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState<FormDataPermohonan | null>(null);
   const pdfRef = useRef<HTMLDivElement>(null);
 
-  const onSubmit = async (data: FormDataPermohonan) => {
-    setIsGenerating(true);
-    setFormData(data);
+  // =========================================================
+  // KONFIGURASI CETAK MENGGUNAKAN REACT-TO-PRINT
+  // =========================================================
+  const handlePrint = useReactToPrint({
+    contentRef: pdfRef,
+    documentTitle: `Formulir_Permohonan_Informasi`,
+  });
 
-    setTimeout(async () => {
-      try {
-        if (pdfRef.current) {
-          const canvas = await html2canvas(pdfRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-          
-          // REVISI: Menggunakan JPEG dengan kualitas 0.8 untuk ukuran yang sangat ringan
-          const imgData = canvas.toDataURL('image/jpeg', 0.8); 
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          
-          const pdfW = 210;
-          const pdfH = 297;
-          const imgProps = pdf.getImageProperties(imgData);
-          const totalImgHeight = (imgProps.height * pdfW) / imgProps.width;
-
-          let heightLeft = totalImgHeight;
-          let position = 0;
-
-          pdf.addImage(imgData, 'JPEG', 0, position, pdfW, totalImgHeight);
-          heightLeft -= pdfH;
-
-          while (heightLeft > 0.1) {
-            position -= pdfH;
-            pdf.addPage();
-            pdf.addImage(imgData, 'JPEG', 0, position, pdfW, totalImgHeight);
-            heightLeft -= pdfH;
-          }
-
-          const safeName = data.nama ? data.nama.replace(/\s+/g, '_') : 'Pemohon';
-          pdf.save(`Permohonan_Informasi_${safeName}.pdf`);
-        }
-      } catch (e) {
-        console.error("Error Generate PDF:", e);
-      } finally {
-        setIsGenerating(false);
-      }
-    }, 800);
+  const onSubmit = (data: FormDataPermohonan) => {
+    setFormData(data); // Simpan data dari inputan ke dalam state
+    
+    // Beri jeda waktu sejenak (150ms) agar React sempat mengisi data 
+    // ke dalam template tersembunyi sebelum memicu jendela print browser
+    setTimeout(() => {
+      handlePrint();
+    }, 150);
   };
 
   return (
     <>
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden mb-20 transition-all">
+        
+        {/* HEADER */}
         <div className="bg-white p-8 border-b border-gray-200">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <div className="p-2 border border-gray-100 rounded-lg shadow-sm">
@@ -76,8 +60,11 @@ const FormPermohonan: React.FC = () => {
           </div>
         </div>
 
+        {/* ISI FORMULIR (Sama Persis Seperti Sebelumnya) */}
         <div className="p-8 md:p-12">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+            
+            {/* IDENTITAS */}
             <div className="space-y-6">
               <h2 className="text-lg font-bold text-gray-900 border-l-4 border-gray-800 pl-4">Identitas Pemohon</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -102,6 +89,7 @@ const FormPermohonan: React.FC = () => {
               </div>
             </div>
 
+            {/* DETAIL PERMOHONAN */}
             <div className="space-y-6 bg-white p-8 rounded-3xl border-2 border-gray-100 shadow-sm">
               <h2 className="text-lg font-bold text-gray-900">Detail Permohonan</h2>
               <div>
@@ -114,6 +102,7 @@ const FormPermohonan: React.FC = () => {
               </div>
             </div>
 
+            {/* CHECKBOX & RADIO */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="p-6 bg-gray-50 rounded-2xl border border-gray-200">
                 <label className="block text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Cara Memperoleh</label>
@@ -139,15 +128,21 @@ const FormPermohonan: React.FC = () => {
               </div>
             </div>
 
+            {/* TOMBOL CETAK */}
             <div className="pt-8 border-t border-gray-200">
-              <button type="submit" disabled={isGenerating} className="w-full bg-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-blue-800 transition-all">
-                {isGenerating ? 'Memproses Dokumen...' : 'Generate & Download PDF Resmi'}
+              <button type="submit" className="w-full bg-blue-900 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-blue-800 transition-all">
+                Cetak Formulir PDF
               </button>
             </div>
+            
           </form>
         </div>
       </div>
-      <TemplatePDFPermohonan ref={pdfRef} data={formData} />
+
+      {/* TEMPLATE TERSEMBUNYI UNTUK DICETAK */}
+      <div className="hidden">
+        <TemplatePDFPermohonan ref={pdfRef} data={formData} />
+      </div>
     </>
   );
 };
