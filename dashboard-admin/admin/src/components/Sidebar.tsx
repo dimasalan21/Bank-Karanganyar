@@ -1,20 +1,22 @@
 // components/Sidebar.tsx
 import { LayoutDashboard, Search, Settings, FileText, User, Users } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  currentPage: string;
-  onNavigate: (page: string) => void;
 }
 
-export default function Sidebar({ isOpen, onClose, currentPage, onNavigate }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'daftar-aduan', label: 'Daftar Aduan', icon: FileText },
-    { id: 'lacak-pengaduan', label: 'Lacak Pengaduan', icon: Search },
-    { id: 'manajemen-user', label: 'Manajemen User', icon: Users },
-    { id: 'setting', label: 'Setting', icon: Settings },
+    { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/aduan', label: 'Daftar Aduan', icon: FileText },
+    { path: '/permintaan-informasi', label: 'Permintaan Informasi', icon: Search },
+    { path: '/manajemen-user', label: 'Manajemen User', icon: Users },
+    { path: '/settings', label: 'Setting', icon: Settings },
   ];
 
   return (
@@ -52,13 +54,13 @@ export default function Sidebar({ isOpen, onClose, currentPage, onNavigate }: Si
       <nav className="flex-1 px-4 py-3 space-y-1.5 overflow-y-auto">
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = currentPage === item.id;
+          const isActive = currentPath === item.path;
 
           return (
-            <button
-              key={item.id}
+            <Link
+              key={item.path}
+              to={item.path}
               onClick={() => {
-                onNavigate(item.id);
                 onClose();
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
@@ -69,7 +71,7 @@ export default function Sidebar({ isOpen, onClose, currentPage, onNavigate }: Si
             >
               <Icon size={20} />
               <span className="text-sm">{item.label}</span>
-            </button>
+            </Link>
           );
         })}
       </nav>

@@ -1,25 +1,18 @@
 // components/Layout.tsx
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import Sidebar from "./Sidebar";
 import { Menu, LogOut } from "lucide-react";
+import { Outlet, useNavigate } from "react-router-dom";
 import BankLogo from "../assets/bank-karanganyar-logo.png";
 
-interface LayoutProps {
-  children: ReactNode;
-  currentPage?: string;
-  onNavigate?: (page: string) => void;
-}
-
-export default function Layout({
-  children,
-  currentPage = "dashboard",
-  onNavigate = () => {},
-}: LayoutProps) {
+export default function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     if (window.confirm("Apakah Anda yakin ingin keluar dari sistem?")) {
-      window.location.reload();
+      // Clear any auth tokens here if applicable
+      navigate("/login");
     }
   };
 
@@ -42,8 +35,6 @@ export default function Layout({
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
-        currentPage={currentPage}
-        onNavigate={onNavigate}
       />
 
       {/* AREA UTAMA */}
@@ -81,7 +72,9 @@ export default function Layout({
         </header>
 
         {/* KONTEN HALAMAN */}
-        <div className="flex-1 pt-20 pb-6 w-full max-w-full">{children}</div>
+        <div className="flex-1 pt-20 pb-6 w-full max-w-full">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
