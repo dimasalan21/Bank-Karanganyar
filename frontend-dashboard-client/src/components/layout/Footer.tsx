@@ -7,7 +7,7 @@ import React from 'react';
 // =========================================================
 import logoOjk from '../../assets/ojk.png';
 import logoBi from '../../assets/bi.png';
-import logoLps from '../../assets/lps.png';
+import logoLps from '../../assets/lps2.png';
 
 const Footer: React.FC = () => {
   return (
