@@ -1,52 +1,65 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom'; 
 // Pastikan path logo ini sesuai dengan letak file Anda
 import logoBank from '../../assets/logo-final.png'; 
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // =========================================================
+  // FUNGSI BARU: Memaksa scroll ke atas saat Home/Logo diklik
+  // =========================================================
+  const handleHomeClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsMobileMenuOpen(false); // Memastikan menu mobile tertutup
+  };
+
   return (
-    <nav className="bg-[#123296] shadow-md sticky top-0 z-50">
+    <nav className="bg-[#123296] shadow-md sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        
+        <div className="flex justify-between items-center h-16 md:h-20">
           
-          {/* SISI KIRI: Logo & Nama */}
-          <div className="flex items-center gap-4">
+          {/* SISI KIRI: Logo & Nama (Ditambahkan fungsi handleHomeClick) */}
+          <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3 md:gap-4 cursor-pointer">
             <div className="flex items-center justify-center">
               <img 
                 src={logoBank} 
                 alt="Logo Bank Karanganyar" 
-                className="h-14 w-auto object-contain p-1" 
+                className="h-10 sm:h-12 md:h-14 w-auto object-contain p-1 transition-all duration-300" 
                 onError={(e) => {
                   e.currentTarget.src = "https://placehold.co/150x50/1e3a8a/ffffff?text=LOGO+BANK";
                 }}
               />
             </div>
-            <div className="hidden sm:block">
-              <h1 className="text-white font-bold text-lg leading-tight">
+            <div className="hidden sm:block flex-col justify-center">
+              <h1 className="text-white font-bold text-sm md:text-base lg:text-lg leading-tight tracking-wide">
                 PT BPR BANK KARANGANYAR
               </h1>
-              <p className="text-blue-200 text-xs font-medium tracking-wider">
+              <p className="text-blue-200 text-[10px] md:text-xs font-medium tracking-widest mt-0.5">
                 E-FORMULIR SYSTEM
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* SISI KANAN: Menu Desktop */}
-          <div className="hidden md:flex items-center space-x-10">
-            <a href="#" className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">Home</a>
-            <a href="#about" className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">About</a>
-            <a href="#contact" className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">Contact us</a>
+          <div className="hidden md:flex items-center space-x-8 lg:space-x-10">
+            {/* Ditambahkan fungsi handleHomeClick di tombol Home */}
+            <Link to="/" onClick={handleHomeClick} className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">
+              Home
+            </Link>
+            <a href="/#about" className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">About</a>
+            <a href="/#contact" className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">Contact us</a>
           </div>
 
           {/* SISI KANAN: Tombol Hamburger Mobile */}
           <div className="md:hidden flex items-center">
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-              className="text-white hover:text-yellow-400 focus:outline-none p-2"
+              className="text-white hover:text-yellow-400 focus:outline-none p-1.5 transition-colors"
             >
-              {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+              {isMobileMenuOpen ? <X className="w-6 h-6 sm:w-7 sm:h-7" /> : <Menu className="w-6 h-6 sm:w-7 sm:h-7" />}
             </button>
           </div>
 
@@ -57,26 +70,27 @@ const Navbar: React.FC = () => {
       {/* MENU DROPDOWN MOBILE */}
       {/* ========================================================= */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute w-full shadow-2xl border-t border-white/10 bg-[#123296]">
-          <div className="px-6 py-6 space-y-2 flex flex-col">
-            <a 
-              href="#" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-4 rounded-xl text-lg font-bold text-white hover:bg-white/10 transition-all border-b border-white/5"
+        <div className="md:hidden absolute w-full shadow-2xl border-t border-white/10 bg-[#123296] animate-in slide-in-from-top-2 duration-200">
+          <div className="px-5 py-4 space-y-1 flex flex-col">
+            {/* Ditambahkan fungsi handleHomeClick di tombol Home Mobile */}
+            <Link 
+              to="/" 
+              onClick={handleHomeClick}
+              className="block px-4 py-3 rounded-lg text-base font-semibold text-white hover:bg-white/10 transition-all border-b border-white/5"
             >
               Home
-            </a>
+            </Link>
             <a 
-              href="#about" 
+              href="/#about" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-4 rounded-xl text-lg font-bold text-white hover:bg-white/10 transition-all border-b border-white/5"
+              className="block px-4 py-3 rounded-lg text-base font-semibold text-white hover:bg-white/10 transition-all border-b border-white/5"
             >
               About
             </a>
             <a 
-              href="#contact" 
+              href="/#contact" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-4 py-4 rounded-xl text-lg font-bold text-white hover:bg-white/10 transition-all"
+              className="block px-4 py-3 rounded-lg text-base font-semibold text-white hover:bg-white/10 transition-all"
             >
               Contact us
             </a>
