@@ -8,11 +8,11 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // =========================================================
-  // FUNGSI BARU: Memaksa scroll ke atas saat Home/Logo diklik
+  // FUNGSI KHUSUS: Memaksa scroll ke atas saat Home/Logo diklik
   // =========================================================
   const handleHomeClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setIsMobileMenuOpen(false); // Memastikan menu mobile tertutup
+    setIsMobileMenuOpen(false); // Memastikan menu mobile tertutup otomatis
   };
 
   return (
@@ -21,7 +21,9 @@ const Navbar: React.FC = () => {
         
         <div className="flex justify-between items-center h-16 md:h-20">
           
-          {/* SISI KIRI: Logo & Nama (Ditambahkan fungsi handleHomeClick) */}
+          {/* ========================================================= */}
+          {/* SISI KIRI: Logo & Nama Bank */}
+          {/* ========================================================= */}
           <Link to="/" onClick={handleHomeClick} className="flex items-center gap-3 md:gap-4 cursor-pointer">
             <div className="flex items-center justify-center">
               <img 
@@ -43,17 +45,36 @@ const Navbar: React.FC = () => {
             </div>
           </Link>
 
-          {/* SISI KANAN: Menu Desktop */}
+          {/* ========================================================= */}
+          {/* SISI KANAN: Menu Navigasi Desktop */}
+          {/* ========================================================= */}
           <div className="hidden md:flex items-center space-x-8 lg:space-x-10">
-            {/* Ditambahkan fungsi handleHomeClick di tombol Home */}
-            <Link to="/" onClick={handleHomeClick} className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">
+            <Link 
+              to="/" 
+              onClick={handleHomeClick} 
+              className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide"
+            >
               Home
             </Link>
-            <a href="/#about" className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">About</a>
-            <a href="/#contact" className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide">Contact us</a>
+            
+            {/* Menggunakan tag <a> agar fungsi hash-scroll (#) berfungsi dari halaman mana pun */}
+            <a 
+              href="/#about" 
+              className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide"
+            >
+              About
+            </a>
+            <a 
+              href="/#contact" 
+              className="text-white text-sm font-semibold hover:text-yellow-400 transition-colors uppercase tracking-wide"
+            >
+              Contact us
+            </a>
           </div>
 
-          {/* SISI KANAN: Tombol Hamburger Mobile */}
+          {/* ========================================================= */}
+          {/* SISI KANAN: Tombol Hamburger Menu (Mobile) */}
+          {/* ========================================================= */}
           <div className="md:hidden flex items-center">
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
@@ -67,12 +88,11 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* ========================================================= */}
-      {/* MENU DROPDOWN MOBILE */}
+      {/* MENU DROPDOWN MOBILE (Tampil saat Hamburger diklik) */}
       {/* ========================================================= */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute w-full shadow-2xl border-t border-white/10 bg-[#123296] animate-in slide-in-from-top-2 duration-200">
           <div className="px-5 py-4 space-y-1 flex flex-col">
-            {/* Ditambahkan fungsi handleHomeClick di tombol Home Mobile */}
             <Link 
               to="/" 
               onClick={handleHomeClick}
