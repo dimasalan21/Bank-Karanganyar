@@ -86,13 +86,23 @@ const TemplatePDFPermohonan = forwardRef<HTMLDivElement, TemplateProps>(({ data 
                 {data.pekerjaan ? data.pekerjaan : '..................................................................................................................'}
               </td>
             </tr>
+            
+            {/* REVISI: Kolom Telepon dan Email Dipisah */}
             <tr>
-              <td className="w-[230px] py-3.5 align-top">Nomor Telepon/Email</td>
+              <td className="w-[230px] py-3.5 align-top">Nomor Telepon</td>
               <td className="w-[15px] py-3.5 align-top">:</td>
               <td className="py-3.5 align-top">
-                {data.kontak ? data.kontak : '..................................................................................................................\n..................................................................................................................'}
+                {data.telepon ? data.telepon : '..................................................................................................................'}
               </td>
             </tr>
+            <tr>
+              <td className="w-[230px] py-3.5 align-top">Email</td>
+              <td className="w-[15px] py-3.5 align-top">:</td>
+              <td className="py-3.5 align-top">
+                {data.email ? data.email : '..................................................................................................................'}
+              </td>
+            </tr>
+
             <tr>
               <td className="w-[230px] py-3.5 align-top">
                 Rincian Informasi yang dibutuhkan<br/>
