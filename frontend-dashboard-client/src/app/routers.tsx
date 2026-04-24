@@ -92,7 +92,7 @@ const HomePage = () => {
             <div className="w-16 h-16 sm:w-24 sm:h-24 bg-red-50 rounded-2xl flex items-center justify-center mb-4 sm:mb-8 group-hover:bg-red-600 transition-colors">
               <AlertCircle className="w-8 h-8 sm:w-12 sm:h-12 text-red-600 group-hover:text-white" />
             </div>
-            <h3 className="text-[14px] sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">Pengajuan Keberatan</h3>
+            <h3 className="text-[14px] sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">Layanan Aduan</h3>
             <p className="text-gray-500 text-[11px] sm:text-base leading-relaxed">Sampaikan keberatan atau keluhan atas permohonan informasi yang tidak terpenuhi atau tidak sesuai.</p>
           </div>
         </div>
