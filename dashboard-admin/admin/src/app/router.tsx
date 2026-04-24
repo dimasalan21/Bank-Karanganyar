@@ -8,7 +8,7 @@ import DashboardView from '../features/dashboard/pages/DashboardView';
 import AduanList from '../features/aduan/pages/AduanList';
 import PermintaanList from '../features/permintaan-informasi/pages/PermintaanList';
 import UserList from '../features/users/pages/UserList';
-import SettingsView from '../features/settings/SettingsView';
+import SettingsView from '../features/settings/pages/SettingsView';
 import LoginView from '../features/auth/pages/LoginView';
 
 export const router = createBrowserRouter([
