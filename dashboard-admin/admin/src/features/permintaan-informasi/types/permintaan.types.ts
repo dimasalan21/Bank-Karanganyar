@@ -1,5 +1,13 @@
 export type Status = 'Selesai' | 'Dalam Proses' | 'Ditolak';
 
+export interface Lampiran {
+  id: string;
+  nama: string;
+  tipe: 'image' | 'pdf' | 'doc' | 'other';
+  url: string;
+  ukuran: string;
+}
+
 export interface PermintaanInformasi {
   id: string;
   noTiket: string;
@@ -11,6 +19,7 @@ export interface PermintaanInformasi {
   noWa: string;
   alamat: string;
   deskripsi: string;
+  lampiran?: Lampiran[];
 }
 
 export const DATA: PermintaanInformasi[] = [
