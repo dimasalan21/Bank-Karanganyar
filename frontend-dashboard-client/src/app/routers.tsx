@@ -195,9 +195,9 @@ const HomePage = () => {
                 <div>
                   <h4 className="text-blue-300 font-bold mb-1 sm:mb-2 text-[13px] sm:text-sm uppercase tracking-widest">Address</h4>
                   <p className="text-white font-semibold text-lg sm:text-xl leading-relaxed">
-                    Jl. Lawu Timur No 135<br />
-                    Karanganyar, Jawa Tengah<br />
-                    57712
+                    Jl. Lawu No.135, Titang, Tegalgede, Kec. Karanganyar, Kabupaten Karanganyar, Jawa Tengah 57714<br />
+                    <br />
+
                   </p>
                 </div>
               </div>
