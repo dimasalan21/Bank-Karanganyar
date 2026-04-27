@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { Mail, MessageCircle, Pencil, Check, X } from 'lucide-react';
+import { Pencil, Check, X } from 'lucide-react';
 import { STATUS_STYLE, type PermintaanInformasi, type Status } from '../types/permintaan.types';
 
 interface PermintaanStatusCardProps {
   item: PermintaanInformasi;
-  onEmailReply: () => void;
-  onWaReply: () => void;
   onStatusChange?: (newStatus: Status) => void;
 }
 
-export default function PermintaanStatusCard({ item, onEmailReply, onWaReply, onStatusChange }: PermintaanStatusCardProps) {
+export default function PermintaanStatusCard({ item, onStatusChange }: PermintaanStatusCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [tempStatus, setTempStatus] = useState<Status>(item.status);
 
@@ -100,28 +98,6 @@ export default function PermintaanStatusCard({ item, onEmailReply, onWaReply, on
         </div>
       </div>
 
-      {/* Kirim Balasan */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">
-          Kirim Balasan
-        </h2>
-        <div className="space-y-3">
-          <button
-            onClick={onEmailReply}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a1c2d] text-white text-sm font-medium hover:bg-[#2a2d42] transition-colors"
-          >
-            <Mail size={16} />
-            Balas via Email
-          </button>
-          <button
-            onClick={onWaReply}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition-colors"
-          >
-            <MessageCircle size={16} />
-            Balas via WhatsApp
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

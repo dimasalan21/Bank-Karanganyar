@@ -28,7 +28,10 @@ export const DATA: Aduan[] = [
     tanggal: '01 Apr 2026', nama: 'Budi Santoso', email: 'budi.santoso@email.com',
     noWa: '6281234567890', alamat: 'Jl. Merdeka No. 12, Surabaya',
     deskripsi: 'Kartu ATM terblokir setelah salah memasukkan PIN sebanyak 3 kali.',
-    lampiran: [],
+    lampiran: [
+      { id: 'a1', nama: 'bukti-ktp.png', tipe: 'image', url: 'https://picsum.photos/seed/ktp1/800/600', ukuran: '1.1 MB' },
+      { id: 'a2', nama: 'bukti-kartu-atm.png', tipe: 'image', url: 'https://picsum.photos/seed/atm1/800/600', ukuran: '980 KB' },
+    ],
   },
   {
     id: '2', noAduan: 'ADU-2026-0344', kategori: 'Internet Banking', status: 'Selesai',
