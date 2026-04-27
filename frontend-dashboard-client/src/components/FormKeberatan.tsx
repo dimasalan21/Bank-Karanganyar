@@ -26,8 +26,10 @@ const FormKeberatan: React.FC = () => {
     kasusPosisi: '',
   });
 
-  // State untuk menampung file lampiran
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // =========================================================
+  // REVISI: State sekarang berbentuk Array untuk menampung BANYAK file
+  // =========================================================
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   // =========================================================
   // KONFIGURASI CETAK MENGGUNAKAN REACT-TO-PRINT
@@ -37,7 +39,7 @@ const FormKeberatan: React.FC = () => {
     documentTitle: `Formulir_Keberatan_${formData.pemohon.nama || 'Nasabah'}`,
   });
 
-  // Handler Input
+  // Handler Input Teks
   const handlePemohonChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, pemohon: { ...formData.pemohon, [e.target.name]: e.target.value } });
   };
@@ -46,18 +48,29 @@ const FormKeberatan: React.FC = () => {
     setFormData({ ...formData, kuasa: { ...formData.kuasa, [e.target.name]: e.target.value } });
   };
 
-  // Handler File Upload
+  // =========================================================
+  // HANDLER UPLOAD FILE (MULTIPLE)
+  // =========================================================
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
+      // Mengubah FileList menjadi Array dan menggabungkannya dengan file yang sudah ada sebelumnya
+      const newFiles = Array.from(event.target.files);
+      setSelectedFiles((prevFiles) => [...prevFiles, ...newFiles]);
     }
+    // Mereset nilai input agar file yang sama bisa diupload ulang jika barusan dihapus
+    event.target.value = '';
+  };
+
+  // Fungsi untuk menghapus salah satu file dari daftar
+  const removeFile = (indexToRemove: number) => {
+    setSelectedFiles((prevFiles) => prevFiles.filter((_, index) => index !== indexToRemove));
   };
 
   // =========================================================
   // LOGIKA SUBMIT: Kirim ke DB lalu Cetak PDF
   // =========================================================
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Mencegah reload halaman
+    e.preventDefault();
 
     // Mengemas data menjadi FormData siap kirim ke backend (Database)
     const payloadDatabase = new FormData();
@@ -67,13 +80,15 @@ const FormKeberatan: React.FC = () => {
     payloadDatabase.append('kuasa', JSON.stringify(formData.kuasa));
     payloadDatabase.append('alasan', formData.alasan);
     payloadDatabase.append('kasusPosisi', formData.kasusPosisi);
-    
-    if (selectedFile) {
-      payloadDatabase.append('lampiran', selectedFile);
-    }
+
+    // Looping semua file yang dipilih dan masukkan ke dalam array lampiran[]
+    selectedFiles.forEach((file) => {
+      payloadDatabase.append('lampiran[]', file);
+    });
 
     // Simulasi pengiriman data
     console.log("Data Keberatan siap dikirim ke Database:", Object.fromEntries(payloadDatabase.entries()));
+    console.log("Total File Lampiran:", selectedFiles.length);
 
     // Jeda 150ms agar React selesai render data ke hidden PDF sebelum cetak ditarik
     setTimeout(() => {
@@ -84,12 +99,12 @@ const FormKeberatan: React.FC = () => {
   return (
     <>
       <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-6 mb-20 transition-all">
-        
+
         {/* ========================================================= */}
         {/* KOTAK 1: FORMULIR UTAMA (TEMA MERAH KEBERATAN) */}
         {/* ========================================================= */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          
+
           {/* HEADER FORM */}
           <div className="bg-red-700 px-6 py-8 sm:p-10 text-white flex items-center gap-4">
             <div className="bg-white/20 p-3 rounded-xl flex-shrink-0">
@@ -110,11 +125,11 @@ const FormKeberatan: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Nomor Pendaftaran Permohonan Informasi</label>
-                  <input type="text" required value={formData.nomorPendaftaran} onChange={(e) => setFormData({...formData, nomorPendaftaran: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-600 outline-none transition-all" placeholder="Masukkan nomor pendaftaran..." />
+                  <input type="text" required value={formData.nomorPendaftaran} onChange={(e) => setFormData({ ...formData, nomorPendaftaran: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-600 outline-none transition-all" placeholder="Masukkan nomor pendaftaran..." />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Tujuan Penggunaan Informasi</label>
-                  <input type="text" required value={formData.tujuanPenggunaan} onChange={(e) => setFormData({...formData, tujuanPenggunaan: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-600 outline-none transition-all" placeholder="Tujuan penggunaan data..." />
+                  <input type="text" required value={formData.tujuanPenggunaan} onChange={(e) => setFormData({ ...formData, tujuanPenggunaan: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-600 outline-none transition-all" placeholder="Tujuan penggunaan data..." />
                 </div>
               </div>
             </section>
@@ -177,7 +192,7 @@ const FormKeberatan: React.FC = () => {
                   "Informasi yang disampaikan melebihi jangka waktu yang ditentukan"
                 ].map((item, idx) => (
                   <label key={idx} className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:bg-red-50 cursor-pointer transition-colors">
-                    <input type="radio" required name="alasan" value={item} onChange={(e) => setFormData({...formData, alasan: e.target.value})} className="w-4 h-4 text-red-700 focus:ring-red-600" />
+                    <input type="radio" required name="alasan" value={item} onChange={(e) => setFormData({ ...formData, alasan: e.target.value })} className="w-4 h-4 text-red-700 focus:ring-red-600" />
                     <span className="text-sm text-gray-700 font-medium">{item}</span>
                   </label>
                 ))}
@@ -189,13 +204,13 @@ const FormKeberatan: React.FC = () => {
               <h3 className="text-lg font-bold text-gray-900 border-b pb-2 mb-4 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-red-700" /> C. Kasus Posisi
               </h3>
-              <textarea required value={formData.kasusPosisi} onChange={(e) => setFormData({...formData, kasusPosisi: e.target.value})} rows={4} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-600 outline-none resize-none" placeholder="Tuliskan alasan detail keberatan Anda di sini..."></textarea>
+              <textarea required value={formData.kasusPosisi} onChange={(e) => setFormData({ ...formData, kasusPosisi: e.target.value })} rows={4} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-600 outline-none resize-none" placeholder="Tuliskan alasan detail keberatan Anda di sini..."></textarea>
             </section>
           </div>
         </div>
 
         {/* ========================================================= */}
-        {/* KOTAK 2: LAMPIRAN DIGITAL (TEMA MERAH) */}
+        {/* KOTAK 2: LAMPIRAN DIGITAL (MENDUKUNG BANYAK FILE) */}
         {/* ========================================================= */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden transition-all">
           <div className="p-8 md:p-10 space-y-6">
@@ -203,42 +218,51 @@ const FormKeberatan: React.FC = () => {
               Dokumen Pendukung <span className="text-sm font-normal text-gray-500">(Opsional)</span>
             </h2>
             <p className="text-sm text-gray-600 mb-4">
-              Silakan unggah salinan identitas, surat penolakan sebelumnya, atau dokumen pendukung lainnya yang berkaitan dengan keberatan Anda.
+              Silakan unggah salinan identitas, surat penolakan sebelumnya, atau dokumen pendukung lainnya yang berkaitan dengan keberatan Anda. Anda dapat mengunggah lebih dari satu file.
             </p>
-            
-            {!selectedFile ? (
-              <div className="relative border-2 border-dashed border-red-300 bg-red-50/30 rounded-2xl p-8 hover:bg-red-50 transition-colors text-center cursor-pointer group">
-                <input 
-                  type="file" 
-                  onChange={handleFileChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  accept=".pdf,.png,.jpg,.jpeg"
-                />
-                <UploadCloud className="w-10 h-10 text-red-400 mx-auto mb-3 group-hover:text-red-600 transition-colors" />
-                <p className="text-sm font-semibold text-gray-700">Klik atau seret file ke area ini</p>
-                <p className="text-xs text-gray-500 mt-1">Mendukung format PDF, JPG, atau PNG (Maks 5MB)</p>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between bg-white border border-red-200 p-4 rounded-xl shadow-sm">
-                <div className="flex items-center gap-4 overflow-hidden">
-                  <div className="w-10 h-10 bg-red-100 text-red-700 flex items-center justify-center rounded-lg flex-shrink-0">
-                    <Paperclip className="w-5 h-5" />
+
+            {/* Area Dropzone selalu tampil agar user bisa tambah file terus */}
+            <div className="relative border-2 border-dashed border-red-300 bg-red-50/30 rounded-2xl p-8 hover:bg-red-50 transition-colors text-center cursor-pointer group">
+              <input
+                type="file"
+                multiple // <-- MENGIZINKAN BANYAK FILE
+                onChange={handleFileChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                accept=".pdf,.png,.jpg,.jpeg"
+              />
+              <UploadCloud className="w-10 h-10 text-red-400 mx-auto mb-3 group-hover:text-red-600 transition-colors" />
+              <p className="text-sm font-semibold text-gray-700">Klik atau seret file ke area ini</p>
+              <p className="text-xs text-gray-500 mt-1">Mendukung format PDF, JPG, atau PNG (Maks 5MB per file)</p>
+            </div>
+
+            {/* List File yang Sudah Diunggah */}
+            {selectedFiles.length > 0 && (
+              <div className="space-y-3 mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">File Terpilih ({selectedFiles.length}):</p>
+                {selectedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between bg-white border border-red-200 p-4 rounded-xl shadow-sm hover:border-red-300 transition-all">
+                    <div className="flex items-center gap-4 overflow-hidden">
+                      <div className="w-10 h-10 bg-red-100 text-red-700 flex items-center justify-center rounded-lg flex-shrink-0">
+                        <Paperclip className="w-5 h-5" />
+                      </div>
+                      <div className="truncate">
+                        <p className="text-sm font-semibold text-gray-800 truncate">{file.name}</p>
+                        <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(index)}
+                      className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                      title="Hapus file"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
-                  <div className="truncate">
-                    <p className="text-sm font-semibold text-gray-800 truncate">{selectedFile.name}</p>
-                    <p className="text-xs text-gray-500">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                  </div>
-                </div>
-                <button 
-                  type="button" 
-                  onClick={() => setSelectedFile(null)}
-                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
-                  title="Hapus file"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                ))}
               </div>
             )}
+
           </div>
         </div>
 
@@ -246,8 +270,8 @@ const FormKeberatan: React.FC = () => {
         {/* KOTAK 3: TOMBOL EKSEKUSI */}
         {/* ========================================================= */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden transition-all p-6 md:p-8">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="w-full bg-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:bg-red-800 transition-all flex items-center justify-center gap-3"
           >
             <FileCheck className="w-6 h-6" />
@@ -261,7 +285,7 @@ const FormKeberatan: React.FC = () => {
       </form>
 
       {/* ========================================================= */}
-      {/* TEMPLATE TERSEMBUNYI UNTUK DICETAK (TIDAK BERUBAH) */}
+      {/* TEMPLATE TERSEMBUNYI UNTUK DICETAK */}
       {/* ========================================================= */}
       <div className="hidden">
         <TemplatePDFKeberatan ref={componentRef} data={formData} />
