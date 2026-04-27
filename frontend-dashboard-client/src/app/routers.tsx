@@ -21,7 +21,7 @@ const MainLayout = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
-      <Outlet /> 
+      <Outlet />
       <Footer />
     </div>
   );
@@ -40,17 +40,17 @@ const HomePage = () => {
       {/* ========================================================= */}
       <section className="relative w-full h-auto md:h-[75vh] md:min-h-[550px] flex flex-col md:flex-row items-center overflow-hidden bg-[#F4F8FB]">
         {/* 1. GAMBAR DESKTOP */}
-        <img 
-          src={imgHeroPerson} 
-          alt="Latar Belakang Hero" 
-          className="hidden md:block absolute inset-0 w-full h-full object-cover object-center z-0" 
+        <img
+          src={imgHeroPerson}
+          alt="Latar Belakang Hero"
+          className="hidden md:block absolute inset-0 w-full h-full object-cover object-center z-0"
         />
         {/* 2. GAMBAR MOBILE */}
         <div className="w-full md:hidden relative h-[260px] overflow-hidden shadow-sm">
-          <img 
-            src={imgHeroPerson} 
-            alt="Ilustrasi Layanan Mobile" 
-            className="absolute inset-0 w-full h-full object-cover object-right scale-105" 
+          <img
+            src={imgHeroPerson}
+            alt="Ilustrasi Layanan Mobile"
+            className="absolute inset-0 w-full h-full object-cover object-right scale-105"
           />
         </div>
         {/* 3. KONTEN TEKS */}
@@ -63,7 +63,7 @@ const HomePage = () => {
             <p className="text-sm md:text-lg text-slate-700 font-medium leading-relaxed mb-8 md:mb-10 px-1 md:px-0">
               Sistem elektronik resmi PT BPR Bank Karanganyar (Perseroda) untuk kemudahan akses informasi dan pengajuan dokumen nasabah.
             </p>
-            <button 
+            <button
               onClick={() => navigate('/permohonan')}
               className="w-full md:w-auto px-6 py-3.5 md:py-4 bg-blue-900 text-white font-bold rounded-xl hover:bg-blue-800 hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-blue-900/20"
             >
@@ -75,7 +75,7 @@ const HomePage = () => {
 
       {/* MAIN CONTENT */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative z-20">
-        
+
         {/* CARD MENU LAYANAN */}
         <div className="grid grid-cols-2 gap-4 sm:gap-10 max-w-5xl mx-auto">
           {/* CARD 1: PERMOHONAN INFORMASI */}
@@ -176,17 +176,17 @@ const HomePage = () => {
       {/* ========================================================= */}
       <section id="contact" className="w-full bg-blue-950 pt-12 pb-20 sm:py-28 px-4 sm:px-6 lg:px-8 mt-10 scroll-mt-16 sm:scroll-mt-20 border-t-4 border-yellow-500">
         <div className="max-w-7xl mx-auto">
-          
+
           <div className="text-center mb-10 sm:mb-20">
             <h2 className="text-3xl sm:text-5xl font-bold text-white mb-3 sm:mb-6">Hubungi Kami</h2>
             <p className="text-blue-200 text-base sm:text-lg max-w-2xl mx-auto px-2 sm:px-0">Kunjungi kantor operasional kami atau hubungi layanan pelanggan untuk mendapatkan bantuan lebih lanjut terkait pengajuan Anda.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            
+
             {/* SISI KIRI: Informasi Kontak */}
             <div className="space-y-8 sm:space-y-10 flex flex-col justify-center order-2 lg:order-1">
-              
+
               {/* Address */}
               <div className="flex items-start gap-5 sm:gap-6 group">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/10 group-hover:bg-yellow-500 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all border border-white/20">
@@ -228,13 +228,13 @@ const HomePage = () => {
 
             {/* SISI KANAN: Peta Google Maps */}
             <div className="w-full h-[300px] sm:h-[450px] bg-white p-2 sm:p-3 rounded-3xl shadow-2xl order-1 lg:order-2 transform hover:scale-[1.01] transition-all">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d31638.73535936511!2d110.9543149!3d-7.5921784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a189d83abdfc7%3A0xb82ba8b6cb56b0d!2sPT%20BPR%20BANK%20Karanganyar%20(Perseroda)!5e0!3m2!1sid!2sid!4v1776045658886!5m2!1sid!2sid" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d31638.73535936511!2d110.9543149!3d-7.5921784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a189d83abdfc7%3A0xb82ba8b6cb56b0d!2sPT%20BPR%20BANK%20Karanganyar%20(Perseroda)!5e0!3m2!1sid!2sid!4v1776045658886!5m2!1sid!2sid"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="rounded-2xl shadow-inner w-full h-full"
                 title="Lokasi PT BPR Bank Karanganyar"
@@ -254,8 +254,8 @@ const HomePage = () => {
 const PermohonanPage = () => {
   return (
     <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-in fade-in duration-300">
-      <Link 
-        to="/" 
+      <Link
+        to="/"
         className="mb-8 flex items-center text-[#100AAF] font-bold hover:text-blue-800 transition-all bg-white px-6 py-3 rounded-xl border border-gray-200 shadow-sm w-fit"
       >
         ← Kembali ke Menu Utama
@@ -271,8 +271,8 @@ const PermohonanPage = () => {
 const KeberatanPage = () => {
   return (
     <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-in fade-in duration-300">
-      <Link 
-        to="/" 
+      <Link
+        to="/"
         className="mb-8 flex items-center text-red-700 font-bold hover:text-red-800 transition-all bg-white px-6 py-3 rounded-xl border border-gray-200 shadow-sm w-fit"
       >
         ← Kembali ke Menu Utama
