@@ -13,8 +13,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const menuItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/aduan', label: 'Daftar Aduan', icon: FileText },
-    { path: '/permintaan-informasi', label: 'Permintaan Informasi', icon: Search },
+    { 
+      path: '/aduan', 
+      label: 'Daftar Aduan', 
+      icon: FileText,
+      badge: { count: '5', text: 'baru', color: 'bg-blue-400/10 text-blue-400 border-blue-400/20' }
+    },
+    { 
+      path: '/permintaan-informasi', 
+      label: 'Permintaan Informasi', 
+      icon: Search,
+      badge: { count: '12', text: 'baru', color: 'bg-orange-400/10 text-orange-400 border-orange-400/20' }
+    },
     { path: '/manajemen-user', label: 'Manajemen User', icon: Users },
     { path: '/settings', label: 'Setting', icon: Settings },
   ];
@@ -70,11 +80,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               }`}
             >
               <Icon size={20} />
-              <span className="text-sm">{item.label}</span>
+              <span className="text-sm flex-1">{item.label}</span>
+              
+              {item.badge && (
+                <span className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors duration-200 ${
+                  isActive 
+                    ? 'bg-black/10 text-black border-black/20 font-bold' 
+                    : item.badge.color
+                }`}>
+                  {item.badge.count} {item.badge.text}
+                </span>
+              )}
             </Link>
           );
         })}
       </nav>
     </aside>
+
   );
 }
